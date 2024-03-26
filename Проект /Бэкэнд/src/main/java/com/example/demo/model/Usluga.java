@@ -18,6 +18,7 @@ public class Usluga {
     private User user;
 
     private String location;
+    private String coordinates;
     private Date date;
     private String userName;
 
@@ -29,12 +30,13 @@ public class Usluga {
     }
 
 
-    public Usluga(String name, String description, User user, String location, Date date, String userName) {
+    public Usluga(String name, String description, User user, String location, String coordinates, Date date, String userName) {
         super();
         this.name = name;
         this.description=description;
         this.user=user;
         this.location=location;
+        this.coordinates=coordinates;
         this.date=date;
         this.userName=userName;
     }
@@ -61,6 +63,8 @@ public class Usluga {
     }
     public String getLocation(){return location;}
     public void setLocation(String location){this.location=location;}
+    public String getCoordinates(){return coordinates;}
+    public void setCoordinates(String coordinates){this.coordinates=coordinates;}
     public Date getDate(){return date;}
     public void setDate(Date date){this.date=date;}
     public String getUserName(){return userName;}
