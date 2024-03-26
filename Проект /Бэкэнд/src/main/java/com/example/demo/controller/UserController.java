@@ -1,17 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserPostDTO;
-import com.example.demo.model.Event;
 import com.example.demo.model.User;
-import com.example.demo.service.EventService;
+import com.example.demo.model.Usluga;
 import com.example.demo.service.UserService;
+import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +24,7 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    EventService eventService;
+    UslugaService uslugaService;
 
 
     // Get All Users
@@ -47,7 +44,7 @@ public class UserController {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User newUser = new User(newUserDTO.getName(), newUserDTO.getEmail(),
-                encoder.encode(newUserDTO.getPassword()),null,null,null,null,null, null);
+                encoder.encode(newUserDTO.getPassword()),null,null,null);
         userService.addUser(newUser);
         return new ResponseEntity<>(Optional.ofNullable(newUser),HttpStatus.CREATED);
 
@@ -60,7 +57,6 @@ public class UserController {
             User userToUpdate = existingUser.get();
             userToUpdate.setName(newUser.getName());
             userToUpdate.setEmail(newUser.getEmail());
-            userToUpdate.setMission(newUser.getMission());
             userService.addUser(userToUpdate);
 
             return new ResponseEntity<>(Optional.ofNullable(userToUpdate), HttpStatus.OK);
@@ -76,11 +72,6 @@ public class UserController {
             User userToUpdate = existingUser.get();
             if (file != null && !file.isEmpty()) {
                 try {
-                    // Normalize the file na
-
-                    // Save the file to the database or file system
-                    // You can customize this part based on your storage strategy
-                    // For simplicity, we assume storing the file in the database as a byte array
                     userToUpdate.setProfilePicture(file.getBytes());
                 } catch (IOException e) {
                     return new ResponseEntity<>(Optional.empty(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,51 +103,51 @@ public class UserController {
     public Optional<User> getUserByEmail(@PathVariable(value = "email") String email) {
         return Optional.ofNullable(userService.findByEmail(email));
     }
-    @PostMapping("/user/{userId}/events/{eventId}/favorite")
-    public ResponseEntity<String> addEventToFavorites(@PathVariable Long userId, @PathVariable Long eventId) {
+    @PostMapping("/user/{userId}/Uslugas/{UslugaId}/favorite")
+    public ResponseEntity<String> addUslugaToFavorites(@PathVariable Long userId, @PathVariable Long UslugaId) {
         Optional<User> optionalUser = userService.findByID(userId);
-        Optional<Event> optionalEvent = eventService.findByID(eventId);
+        Optional<Usluga> optionalUsluga = uslugaService.findByID(UslugaId);
 
-        if (optionalUser.isPresent() && optionalEvent.isPresent()) {
+        if (optionalUser.isPresent() && optionalUsluga.isPresent()) {
             User user = optionalUser.get();
-            Event event = optionalEvent.get();
-            if (event.getUser().getId().equals(userId)) {
-                return ResponseEntity.badRequest().body("Cannot add own event to favorites.");
+            Usluga Usluga = optionalUsluga.get();
+            if (Usluga.getUser().getId().equals(userId)) {
+                return ResponseEntity.badRequest().body("Cannot add own Usluga to favorites.");
             }
-            user.getFavoriteEvents().add(event);
+            user.getFavoriteUslugas().add(Usluga);
             userService.addUser(user);
 
-            return ResponseEntity.ok("Event added to favorites");
+            return ResponseEntity.ok("Usluga added to favorites");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/user/{userId}/events/{eventId}/favorite")
-    public ResponseEntity<String> removeEventFromFavorites(@PathVariable Long userId, @PathVariable Long eventId) {
+    @DeleteMapping("/user/{userId}/Uslugas/{UslugaId}/favorite")
+    public ResponseEntity<String> removeUslugaFromFavorites(@PathVariable Long userId, @PathVariable Long uslugaId) {
         Optional<User> optionalUser = userService.findByID(userId);
-        Optional<Event> optionalEvent = eventService.findByID(eventId);
+        Optional<Usluga> optionalUsluga = uslugaService.findByID(uslugaId);
 
-        if (optionalUser.isPresent() && optionalEvent.isPresent()) {
+        if (optionalUser.isPresent() && optionalUsluga.isPresent()) {
             User user = optionalUser.get();
-            Event event = optionalEvent.get();
+            Usluga Usluga = optionalUsluga.get();
 
-            user.getFavoriteEvents().remove(event);
+            user.getFavoriteUslugas().remove(Usluga);
             userService.addUser(user);
 
-            return ResponseEntity.ok("Event removed from favorites");
+            return ResponseEntity.ok("Usluga removed from favorites");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{userId}/favorite-events")
-    public ResponseEntity<List<Event>> getFavoriteEvents(@PathVariable Long userId) {
+    @GetMapping("/{userId}/favorite-Uslugas")
+    public ResponseEntity<List<Usluga>> getFavoriteUslugas(@PathVariable Long userId) {
         Optional<User> optionalUser = userService.findByID(userId);
 
         if (optionalUser.isPresent()) {
-            List<Event> favoriteEvents = optionalUser.get().getFavoriteEvents();
-            return ResponseEntity.ok(favoriteEvents);
+            List<Usluga> favoriteUslugas = optionalUser.get().getFavoriteUslugas();
+            return ResponseEntity.ok(favoriteUslugas);
         } else {
             return ResponseEntity.notFound().build();
         }

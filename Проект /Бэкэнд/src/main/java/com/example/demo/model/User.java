@@ -1,8 +1,5 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -38,30 +35,21 @@ public class User implements Serializable {
 	String password;
 
 
-	String mission;
-
-	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private List<Event> experience=new ArrayList<>();
-
 	@Lob
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] profilePicture;
 
 	@ManyToMany
 	@JoinTable(
-			name = "user_favorite_events",
+			name = "user_favorite_Uslugas",
 			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "event_id")
+			inverseJoinColumns = @JoinColumn(name = "Usluga_id")
 	)
-	private List<Event> favoriteEvents = new ArrayList<>();
+	private List<Usluga> favoriteUslugas = new ArrayList<>();
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	@JsonManagedReference
-	private List<Event> events=new ArrayList<>();
+	private List<Usluga> uslugas=new ArrayList<>();
 
-	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private List<Application> applications=new ArrayList<>();
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -79,17 +67,14 @@ public class User implements Serializable {
 	}
 		
 	 
-	 public User(String name, String email, String password, String mission, byte[] profilePicture, List<Event> events, List<Application> applications, List<Event> experience, List<Event> favoriteEvents) {
+	 public User(String name, String email, String password, byte[] profilePicture, List<Usluga> uslugas, List<Usluga> favoriteUslugas) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.mission = mission;
 		this.profilePicture = profilePicture;
-		this.events=events;
-		this.applications=applications;
-		this.experience=experience;
-		this.favoriteEvents=favoriteEvents;
+		this.uslugas=uslugas;
+		this.favoriteUslugas=favoriteUslugas;
 	}
 	
 	
@@ -129,28 +114,16 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-
-
-	public String getMission(){return mission;}
-	public void setMission(String mission){this.mission=mission;}
-
 	public byte[] getProfilePicture(){return profilePicture;}
 	public void setProfilePicture(byte[] profilePicture){this.profilePicture=profilePicture;}
 
-	public List<Event> getEvents(){return events;}
-	public void setEvents(List<Event> events){this.events=events;}
-
-	public List<Application> getApplications(){return applications;}
-	public void setApplications(List<Application> applications){
-		 this.applications=applications;
-	}
-	public List<Event> getExperience(){return experience;}
-	public void setExperience(List<Event> experience){this.experience=experience;}
-	public List<Event> getFavoriteEvents(){return favoriteEvents;}
-	public void setFavoriteEvents(List<Event> favoriteEvents){this.favoriteEvents=favoriteEvents;}
+	public List<Usluga> getUslugas(){return uslugas;}
+	public void setUslugas(List<Usluga> uslugas){this.uslugas=uslugas;}
+	public List<Usluga> getFavoriteUslugas(){return favoriteUslugas;}
+	public void setFavoriteUslugas(List<Usluga> favoriteUslugas){this.favoriteUslugas=favoriteUslugas;}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", mission=" + mission + "]";
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
 	}
 	
 
