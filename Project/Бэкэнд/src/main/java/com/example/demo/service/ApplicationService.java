@@ -20,7 +20,7 @@ public class ApplicationService {
     }
 
 
-    public List<Application> getApplicationsEvent(Long id) {
+    public List<Application> getApplicationsUsluga(Long id) {
         return (List<Application>) applicationRepository.findByUslugaId(id);
     }
     public List<Application> getApplicationsUser(Long id) {
