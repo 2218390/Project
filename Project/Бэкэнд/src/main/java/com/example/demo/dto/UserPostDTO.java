@@ -3,12 +3,14 @@ package com.example.demo.dto;
 public class UserPostDTO {
 	String name;
 	String email;
+	String telephone_number;
 	String password;
 	
-	public UserPostDTO(String name, String email, String password) {
+	public UserPostDTO(String name, String email, String telephone_number, String password) {
 		super();
 		this.name = name;
 		this.email = email;
+		this.telephone_number = telephone_number;
 		this.password = password;
 	}
 	
@@ -27,6 +29,14 @@ public class UserPostDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getTelephone_number() {
+		return telephone_number;
+	}
+
+	public void setTelephone_number(String telephone_number) {
+		this.telephone_number = telephone_number;
+	}
+
 
 
 

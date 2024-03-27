@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Master;
 import com.example.demo.model.Usluga;
-import com.example.demo.model.User;
+import com.example.demo.repository.MasterRepository;
 import com.example.demo.repository.UslugaRepository;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +20,17 @@ public class UslugaController {
     private UslugaRepository UslugaRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private MasterRepository masterRepository;
 
     @Autowired
     UslugaService uslugaService;
 
-    @PostMapping(path="/create/{userId}")
+    @PostMapping(path="/create/{masterId}")
     public ResponseEntity<?> createUsluga(@PathVariable Long userId, @RequestBody Usluga usluga) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            usluga.setUser(user);
+        Optional<Master> optionalMaster = masterRepository.findById(userId);
+        if (optionalMaster.isPresent()) {
+            Master master = optionalMaster.get();
+            usluga.setMaster(master);
             Usluga savedUsluga = UslugaRepository.save(usluga);
             return ResponseEntity.ok(savedUsluga);
         } else {
@@ -43,7 +43,7 @@ public class UslugaController {
         List<Usluga> Uslugas = UslugaRepository.findAll();
         return ResponseEntity.ok(Uslugas);
     }
-    @GetMapping("/{userId}/Uslugas")
+    @GetMapping("/{masterId}/Uslugas")
     public ResponseEntity<List<Usluga>> getUslugasByUserId(@PathVariable Long userId) {
         List<Usluga> uslugas = uslugaService.getUslugas(userId);
         return ResponseEntity.ok(uslugas);
@@ -51,7 +51,7 @@ public class UslugaController {
     @DeleteMapping("/{id}")
     public String deleteUsluga(@PathVariable(value = "id") long Id) {
         uslugaService.deleteUsluga(Id);
-        return "User Deleted";
+        return "Usluga Deleted";
     }
     @GetMapping("/search")
     public ResponseEntity<List<Usluga>> searchUslugasByName(@RequestParam String name) {

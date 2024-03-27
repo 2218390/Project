@@ -43,9 +43,9 @@ public class UserController {
         }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        User newUser = new User(newUserDTO.getName(), newUserDTO.getEmail(),
-                encoder.encode(newUserDTO.getPassword()),null,null,null);
-        userService.addUser(newUser);
+        User newUser = new User(newUserDTO.getName(), newUserDTO.getEmail(), newUserDTO.getTelephone_number(),
+                encoder.encode(newUserDTO.getPassword()),null,null);
+        userService.saveUser(newUser);
         return new ResponseEntity<>(Optional.ofNullable(newUser),HttpStatus.CREATED);
 
     }
@@ -57,7 +57,7 @@ public class UserController {
             User userToUpdate = existingUser.get();
             userToUpdate.setName(newUser.getName());
             userToUpdate.setEmail(newUser.getEmail());
-            userService.addUser(userToUpdate);
+            userService.saveUser(userToUpdate);
 
             return new ResponseEntity<>(Optional.ofNullable(userToUpdate), HttpStatus.OK);
         } else {
@@ -77,7 +77,7 @@ public class UserController {
                     return new ResponseEntity<>(Optional.empty(), HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
-            userService.addUser(userToUpdate);
+            userService.saveUser(userToUpdate);
 
             return new ResponseEntity<>(Optional.ofNullable(userToUpdate), HttpStatus.OK);
         } else {
@@ -111,11 +111,8 @@ public class UserController {
         if (optionalUser.isPresent() && optionalUsluga.isPresent()) {
             User user = optionalUser.get();
             Usluga Usluga = optionalUsluga.get();
-            if (Usluga.getUser().getId().equals(userId)) {
-                return ResponseEntity.badRequest().body("Cannot add own Usluga to favorites.");
-            }
             user.getFavoriteUslugas().add(Usluga);
-            userService.addUser(user);
+            userService.saveUser(user);
 
             return ResponseEntity.ok("Usluga added to favorites");
         } else {
@@ -133,7 +130,7 @@ public class UserController {
             Usluga Usluga = optionalUsluga.get();
 
             user.getFavoriteUslugas().remove(Usluga);
-            userService.addUser(user);
+            userService.saveUser(user);
 
             return ResponseEntity.ok("Usluga removed from favorites");
         } else {

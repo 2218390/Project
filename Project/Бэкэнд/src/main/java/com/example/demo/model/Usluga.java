@@ -13,9 +13,9 @@ public class Usluga {
     private String name;
     private String description;
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="master_id")
     @JsonBackReference
-    private User user;
+    private Master master;
 
     private String location;
     private String coordinates;
@@ -30,11 +30,11 @@ public class Usluga {
     }
 
 
-    public Usluga(String name, String description, User user, String location, String coordinates, Date date, String userName) {
+    public Usluga(String name, String description, Master master, String location, String coordinates, Date date, String userName) {
         super();
         this.name = name;
         this.description=description;
-        this.user=user;
+        this.master=master;
         this.location=location;
         this.coordinates=coordinates;
         this.date=date;
@@ -55,11 +55,11 @@ public class Usluga {
     }
     public String getDescription(){return description;}
     public void setDescription(String description){this.description=description;}
-    public User getUser() {
-        return user;
+    public Master getMaster() {
+        return master;
     }
-    public void setUser(User user){
-        this.user=user;
+    public void setMaster(Master master){
+        this.master=master;
     }
     public String getLocation(){return location;}
     public void setLocation(String location){this.location=location;}
