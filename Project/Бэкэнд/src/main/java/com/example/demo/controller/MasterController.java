@@ -2,10 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.UserPostDTO;
 import com.example.demo.model.Master;
-import com.example.demo.model.User;
 import com.example.demo.model.Usluga;
 import com.example.demo.service.MasterService;
-import com.example.demo.service.UserService;
 import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
