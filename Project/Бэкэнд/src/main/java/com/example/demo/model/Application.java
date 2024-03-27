@@ -17,7 +17,7 @@ public class Application {
     @JsonIgnoreProperties("applications")
     private Usluga usluga;
     private String applicantName;
-    private String eventName;
+    private String uslugaName;
     private String applicationStatus;
     private String applicantEmail;
     @ManyToOne
@@ -28,11 +28,11 @@ public class Application {
         super();
         // TODO Auto-generated constructor stub
     }
-    public Application(String applicantName, String eventName, String applicationStatus, String applicantEmail, Usluga usluga, User user) {
+    public Application(String applicantName, String uslugaName, String applicationStatus, String applicantEmail, Usluga usluga, User user) {
         super();
         this.usluga=usluga;
         this.applicantName=applicantName;
-        this.eventName=eventName;
+        this.uslugaName=uslugaName;
         this.applicationStatus=applicationStatus;
         this.applicantEmail=applicantEmail;
         this.user=user;
@@ -56,11 +56,11 @@ public class Application {
     public void setApplicantName(String applicantName){
         this.applicantName=applicantName;
     }
-    public String getEventName(){
-        return eventName;
+    public String getUslugaName(){
+        return uslugaName;
     }
-    public void setEventName(String eventName){
-        this.eventName=eventName;
+    public void setUslugaName(String uslugaName){
+        this.uslugaName=uslugaName;
     }
     public String getApplicationStatus(){
         return applicationStatus;

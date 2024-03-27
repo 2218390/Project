@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class MasterController {
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     MasterService masterService;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     UslugaService uslugaService;
 
