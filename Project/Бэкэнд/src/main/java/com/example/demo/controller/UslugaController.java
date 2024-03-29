@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Master;
+import com.example.demo.model.User;
 import com.example.demo.model.Usluga;
-import com.example.demo.repository.MasterRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UslugaRepository;
 import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +20,17 @@ public class UslugaController {
     private UslugaRepository UslugaRepository;
 
     @Autowired
-    private MasterRepository masterRepository;
+    private UserRepository userRepository;
 
     @Autowired
     UslugaService uslugaService;
 
-    @PostMapping(path="/create/{masterId}")
+    @PostMapping(path="/create/{userId}")
     public ResponseEntity<?> createUsluga(@PathVariable Long userId, @RequestBody Usluga usluga) {
-        Optional<Master> optionalMaster = masterRepository.findById(userId);
-        if (optionalMaster.isPresent()) {
-            Master master = optionalMaster.get();
-            usluga.setMaster(master);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            usluga.setUser(user);
             Usluga savedUsluga = UslugaRepository.save(usluga);
             return ResponseEntity.ok(savedUsluga);
         } else {
@@ -43,7 +43,7 @@ public class UslugaController {
         List<Usluga> Uslugas = UslugaRepository.findAll();
         return ResponseEntity.ok(Uslugas);
     }
-    @GetMapping("/{masterId}/Uslugas")
+    @GetMapping("/{userId}/Uslugas")
     public ResponseEntity<List<Usluga>> getUslugasByUserId(@PathVariable Long userId) {
         List<Usluga> uslugas = uslugaService.getUslugas(userId);
         return ResponseEntity.ok(uslugas);

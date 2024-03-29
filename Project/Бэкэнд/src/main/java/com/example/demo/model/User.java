@@ -38,11 +38,12 @@ public class User implements Serializable {
 	@NotBlank
 	String password;
 
-
+	String role;
 	@Lob
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] profilePicture;
-
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+	Portfolio portfolio;
 	@ManyToMany
 	@JoinTable(
 			name = "user_favorite_Uslugas",
@@ -50,6 +51,10 @@ public class User implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "Usluga_id")
 	)
 	private List<Usluga> favoriteUslugas = new ArrayList<>();
+
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Usluga> uslugas=new ArrayList<>();
 
 
 	@Column(nullable = false, updatable = false)
@@ -69,13 +74,18 @@ public class User implements Serializable {
 	}
 		
 	 
-	 public User(String name, String email, String telephone_number, String password, byte[] profilePicture, List<Usluga> favoriteUslugas) {
+	 public User(String name, String email, String telephone_number, String password, String role, byte[] profilePicture,List<Usluga> uslugas, List<Usluga> favoriteUslugas) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.telephone_number = telephone_number;
 		this.password = password;
+		this.role = role;
+		if(role.equals("master")){
+			this.portfolio = new Portfolio();
+		}
 		this.profilePicture = profilePicture;
+		this.uslugas=uslugas;
 		this.favoriteUslugas=favoriteUslugas;
 	}
 	
@@ -127,7 +137,13 @@ public class User implements Serializable {
 	public byte[] getProfilePicture(){return profilePicture;}
 	public void setProfilePicture(byte[] profilePicture){this.profilePicture=profilePicture;}
 
+	public List<Usluga> getUslugas() {
+		return uslugas;
+	}
 
+	public void setUslugas(List<Usluga> uslugas) {
+		this.uslugas = uslugas;
+	}
 
 	public List<Usluga> getFavoriteUslugas(){return favoriteUslugas;}
 	public void setFavoriteUslugas(List<Usluga> favoriteUslugas){this.favoriteUslugas=favoriteUslugas;}

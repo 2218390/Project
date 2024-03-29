@@ -44,7 +44,7 @@ public class UserController {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User newUser = new User(newUserDTO.getName(), newUserDTO.getEmail(), newUserDTO.getTelephone_number(),
-                encoder.encode(newUserDTO.getPassword()),null,null);
+                encoder.encode(newUserDTO.getPassword()),null,null,null,null);
         userService.saveUser(newUser);
         return new ResponseEntity<>(Optional.ofNullable(newUser),HttpStatus.CREATED);
 
