@@ -49,7 +49,6 @@ public class ApplicationController {
                 application.setApplicantName(user.getName());
                 application.setApplicantEmail(user.getEmail());
                 application.setUslugaName(usluga.getName());
-                application.setApplicationStatus("pending");
                 Application savedApplication = applicationRepository.save(application);
                 return ResponseEntity.ok(savedApplication);
             }
