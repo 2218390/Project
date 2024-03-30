@@ -85,8 +85,8 @@ public class User implements Serializable {
 			this.portfolio = new Portfolio();
 		}
 		this.profilePicture = profilePicture;
-		this.uslugas=uslugas;
-		this.favoriteUslugas=favoriteUslugas;
+		this.uslugas = uslugas;
+		this.favoriteUslugas = favoriteUslugas;
 	}
 	
 	

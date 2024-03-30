@@ -38,12 +38,11 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<Optional<User>> addUser(@RequestBody UserPostDTO newUserDTO) {
 
-        if (newUserDTO.getName()==null ||
-                newUserDTO.getEmail()==null ||
-                newUserDTO.getPassword()==null || newUserDTO.getTelephone_number()==null || newUserDTO.getRole()==null) {
+        if (newUserDTO.getName() == null ||
+                newUserDTO.getEmail() == null ||
+                newUserDTO.getPassword() == null || newUserDTO.getTelephone_number() == null || newUserDTO.getRole() == null) {
             return new ResponseEntity<>(Optional.ofNullable(null), HttpStatus.BAD_REQUEST);
         }
-
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User newUser = new User(newUserDTO.getName(), newUserDTO.getEmail(), newUserDTO.getTelephone_number(),
                 encoder.encode(newUserDTO.getPassword()),newUserDTO.getRole(),null,null,null);
@@ -105,35 +104,30 @@ public class UserController {
     public Optional<User> getUserByEmail(@PathVariable(value = "email") String email) {
         return Optional.ofNullable(userService.findByEmail(email));
     }
-    @PostMapping("/user/{userId}/Uslugas/{UslugaId}/favorite")
-    public ResponseEntity<String> addUslugaToFavorites(@PathVariable Long userId, @PathVariable Long UslugaId) {
+    @PostMapping("/user/{userId}/Uslugas/{uslugaId}/favorite")
+    public ResponseEntity<String> addUslugaToFavorites(@PathVariable Long userId, @PathVariable Long uslugaId) {
         Optional<User> optionalUser = userService.findByID(userId);
-        Optional<Usluga> optionalUsluga = uslugaService.findByID(UslugaId);
-
+        Optional<Usluga> optionalUsluga = uslugaService.findByID(uslugaId);
         if (optionalUser.isPresent() && optionalUsluga.isPresent()) {
             User user = optionalUser.get();
             Usluga Usluga = optionalUsluga.get();
             user.getFavoriteUslugas().add(Usluga);
             userService.saveUser(user);
-
             return ResponseEntity.ok("Usluga added to favorites");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/user/{userId}/Uslugas/{UslugaId}/favorite")
+    @DeleteMapping("/user/{userId}/Uslugas/{uslugaId}/favorite")
     public ResponseEntity<String> removeUslugaFromFavorites(@PathVariable Long userId, @PathVariable Long uslugaId) {
         Optional<User> optionalUser = userService.findByID(userId);
         Optional<Usluga> optionalUsluga = uslugaService.findByID(uslugaId);
-
         if (optionalUser.isPresent() && optionalUsluga.isPresent()) {
             User user = optionalUser.get();
             Usluga Usluga = optionalUsluga.get();
-
             user.getFavoriteUslugas().remove(Usluga);
             userService.saveUser(user);
-
             return ResponseEntity.ok("Usluga removed from favorites");
         } else {
             return ResponseEntity.notFound().build();
@@ -143,7 +137,6 @@ public class UserController {
     @GetMapping("/{userId}/favorite-Uslugas")
     public ResponseEntity<List<Usluga>> getFavoriteUslugas(@PathVariable Long userId) {
         Optional<User> optionalUser = userService.findByID(userId);
-
         if (optionalUser.isPresent()) {
             List<Usluga> favoriteUslugas = optionalUser.get().getFavoriteUslugas();
             return ResponseEntity.ok(favoriteUslugas);

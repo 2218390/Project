@@ -33,12 +33,12 @@ public class Usluga {
     public Usluga(String name, String description, User user, String location, String coordinates, Date date, String userName) {
         super();
         this.name = name;
-        this.description=description;
-        this.user=user;
-        this.location=location;
-        this.coordinates=coordinates;
-        this.date=date;
-        this.userName=userName;
+        this.description = description;
+        this.user = user;
+        this.location = location;
+        this.coordinates = coordinates;
+        this.date = date;
+        this.userName = userName;
     }
 
     public Long getId() {

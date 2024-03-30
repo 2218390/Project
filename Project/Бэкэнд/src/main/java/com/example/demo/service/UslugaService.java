@@ -27,7 +27,7 @@ public class UslugaService {
     public Optional<Usluga> findByID(Long id) {
         return uslugaRepository.findById(id);
     }
-    public void addUsluga(Usluga newUsluga) {
+    public void saveUsluga(Usluga newUsluga) {
         uslugaRepository.save(newUsluga);
     }
     public void deleteUsluga(Long id) {

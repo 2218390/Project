@@ -6,6 +6,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UslugaRepository;
 import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,22 @@ public class UslugaController {
             return ResponseEntity.ok(savedUsluga);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/usluga/{id}")
+    public ResponseEntity<Optional<Usluga>> updateUsluga(@PathVariable(value="id") long Id, @RequestBody Usluga newUsluga ){
+        Optional<Usluga> existingUsluga = uslugaService.findByID(Id);
+        if (existingUsluga.isPresent()) {
+            Usluga uslugaToUpdate = existingUsluga.get();
+            uslugaToUpdate.setName(newUsluga.getName());
+            uslugaToUpdate.setDate(newUsluga.getDate());
+            uslugaToUpdate.setDescription(newUsluga.getDescription());
+            uslugaToUpdate.setCoordinates(newUsluga.getCoordinates());
+            uslugaToUpdate.setLocation(newUsluga.getLocation());
+            uslugaService.saveUsluga(uslugaToUpdate);
+            return new ResponseEntity<>(Optional.ofNullable(uslugaToUpdate), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
         }
     }
 
