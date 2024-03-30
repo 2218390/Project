@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class PorfolioController {
+public class PortfolioController {
     @Autowired
     PortfolioService portfolioService;
     @Autowired
@@ -26,7 +26,7 @@ public class PorfolioController {
         return portfolioService.getPortfolios();
     }
 
-   @PostMapping(path="/create_portfolio/{userId}")
+    @PostMapping(path="/create_portfolio/{userId}")
     public ResponseEntity<?> createPortfolio(@PathVariable Long userId, @RequestBody Portfolio portfolio) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
