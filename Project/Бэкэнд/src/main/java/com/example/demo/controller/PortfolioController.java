@@ -6,6 +6,7 @@ import com.example.demo.repository.PortfolioRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,5 +49,19 @@ public class PortfolioController {
     public String deleteUser(@PathVariable(value = "id") long Id) {
         portfolioService.deletePortfolio(Id);
         return "Portfolio Deleted";
+    }
+    @PutMapping("/portfolio/{id}")
+    public ResponseEntity<Optional<Portfolio>> updatePortfolio(@PathVariable(value="id") long Id, @RequestBody Portfolio newPortfolio ){
+        Optional<Portfolio> existingPortfolio = portfolioService.findByID(Id);
+        if (existingPortfolio.isPresent()) {
+            Portfolio portfolioToUpdate = existingPortfolio.get();
+            portfolioToUpdate.setProffesion(newPortfolio.getProffesion());
+            portfolioToUpdate.setPhotos(newPortfolio.getPhotos());
+            portfolioToUpdate.setDescription(newPortfolio.getDescription());
+            portfolioService.savePortfolio(portfolioToUpdate);
+            return new ResponseEntity<>(Optional.ofNullable(portfolioToUpdate), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
+        }
     }
 }
