@@ -7,9 +7,9 @@ import com.example.demo.repository.ApplicationRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UslugaRepository;
 import com.example.demo.service.ApplicationService;
-import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,18 +19,19 @@ import java.util.Optional;
 @RequestMapping("/applications")
 public class ApplicationController {
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
+    private final ApplicationRepository applicationRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    private final UslugaRepository uslugaRepository;
+    private final ApplicationService applicationService;
     @Autowired
-    private UslugaRepository uslugaRepository;
-    @Autowired
-    private ApplicationService applicationService;
-    @Autowired
-    private UslugaService uslugaService;
+    public ApplicationController(ApplicationRepository applicationRepository, UserRepository userRepository, UslugaRepository uslugaRepository, ApplicationService applicationService) {
+        this.applicationRepository = applicationRepository;
+        this.userRepository = userRepository;
+        this.uslugaRepository = uslugaRepository;
+        this.applicationService = applicationService;
+    }
 
     @PostMapping("/apply/{userId}/{uslugaId}")
     public ResponseEntity<?> applyForUsluga(@PathVariable Long uslugaId, @PathVariable Long userId, @RequestBody Application application) {
@@ -40,7 +41,6 @@ public class ApplicationController {
             Usluga usluga = optionalUsluga.get();
             User user = optionalUser.get();
             boolean alreadyApplied = applicationRepository.existsByUserAndUsluga(user, usluga);
-
             if (alreadyApplied) {
                 return ResponseEntity.badRequest().body("User has already applied to this event.");
             } else {
@@ -57,6 +57,7 @@ public class ApplicationController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PreAuthorize("hasRole('ROLE_MASTER')")
     @GetMapping("/{uslugaId}/applications")
     public ResponseEntity<List<Application>> getApplicationsForUsluga(@PathVariable Long uslugaId) {
         List<Application> applications = applicationService.getApplicationsUsluga(uslugaId);

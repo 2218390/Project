@@ -8,19 +8,23 @@ import com.example.demo.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+@PreAuthorize("hasRole('ROLE_MASTER')")
 @RestController
 public class PortfolioController {
+    private final PortfolioService portfolioService;
+    private final UserRepository userRepository;
+    private final PortfolioRepository portfolioRepository;
     @Autowired
-    PortfolioService portfolioService;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PortfolioRepository portfolioRepository;
+    public PortfolioController(PortfolioService portfolioService, UserRepository userRepository, PortfolioRepository portfolioRepository) {
+        this.portfolioService = portfolioService;
+        this.userRepository = userRepository;
+        this.portfolioRepository = portfolioRepository;
+    }
 
     @GetMapping("/portfolio")
     public List<Portfolio> getUsers() {

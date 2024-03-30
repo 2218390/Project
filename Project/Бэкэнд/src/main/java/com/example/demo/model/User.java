@@ -144,6 +144,12 @@ public class User implements Serializable {
 	public void setUslugas(List<Usluga> uslugas) {
 		this.uslugas = uslugas;
 	}
+	public String getRole(){
+		 return role;
+	}
+	public void setRole(String role){
+		 this.role=role;
+	}
 
 	public List<Usluga> getFavoriteUslugas(){return favoriteUslugas;}
 	public void setFavoriteUslugas(List<Usluga> favoriteUslugas){this.favoriteUslugas=favoriteUslugas;}

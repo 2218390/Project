@@ -20,12 +20,14 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
+    private final UslugaService uslugaService;
     @Autowired
-    UslugaService uslugaService;
-
+    public UserController(UserService userService, UslugaService uslugaService) {
+        this.userService = userService;
+        this.uslugaService = uslugaService;
+    }
 
     // Get All Users
     @GetMapping("/user")
@@ -38,13 +40,13 @@ public class UserController {
 
         if (newUserDTO.getName()==null ||
                 newUserDTO.getEmail()==null ||
-                newUserDTO.getPassword()==null) {
+                newUserDTO.getPassword()==null || newUserDTO.getTelephone_number()==null || newUserDTO.getRole()==null) {
             return new ResponseEntity<>(Optional.ofNullable(null), HttpStatus.BAD_REQUEST);
         }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User newUser = new User(newUserDTO.getName(), newUserDTO.getEmail(), newUserDTO.getTelephone_number(),
-                encoder.encode(newUserDTO.getPassword()),null,null,null,null);
+                encoder.encode(newUserDTO.getPassword()),newUserDTO.getRole(),null,null,null);
         userService.saveUser(newUser);
         return new ResponseEntity<>(Optional.ofNullable(newUser),HttpStatus.CREATED);
 

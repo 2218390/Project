@@ -18,7 +18,6 @@ public class Application {
     private Usluga usluga;
     private String applicantName;
     private String uslugaName;
-    private String applicationStatus;
     private String applicantEmail;
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -28,12 +27,11 @@ public class Application {
         super();
         // TODO Auto-generated constructor stub
     }
-    public Application(String applicantName, String uslugaName, String applicationStatus, String applicantEmail, Usluga usluga, User user) {
+    public Application(String applicantName, String uslugaName, String applicantEmail, Usluga usluga, User user) {
         super();
         this.usluga=usluga;
         this.applicantName=applicantName;
         this.uslugaName=uslugaName;
-        this.applicationStatus=applicationStatus;
         this.applicantEmail=applicantEmail;
         this.user=user;
     }
@@ -61,12 +59,6 @@ public class Application {
     }
     public void setUslugaName(String uslugaName){
         this.uslugaName=uslugaName;
-    }
-    public String getApplicationStatus(){
-        return applicationStatus;
-    }
-    public void setApplicationStatus(String applicationStatus){
-        this.applicationStatus=applicationStatus;
     }
     public String getApplicantEmail(){return applicantEmail;}
     public void setApplicantEmail(String applicantEmail){this.applicantEmail=applicantEmail;}

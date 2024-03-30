@@ -24,7 +24,6 @@ public class Usluga {
     private String userName;
 
 
-
     public Usluga() {
         super();
         // TODO Auto-generated constructor stub

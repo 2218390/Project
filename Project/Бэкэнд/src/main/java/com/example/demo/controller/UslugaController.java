@@ -7,6 +7,7 @@ import com.example.demo.repository.UslugaRepository;
 import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,22 +17,26 @@ import java.util.Optional;
 @RequestMapping("/Uslugas")
 public class UslugaController {
 
-    @Autowired
-    private UslugaRepository UslugaRepository;
+    private final UslugaRepository uslugaRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    private final UslugaService uslugaService;
     @Autowired
-    UslugaService uslugaService;
+    public UslugaController(UslugaRepository uslugaRepository, UserRepository userRepository, UslugaService uslugaService) {
+        this.uslugaRepository = uslugaRepository;
+        this.userRepository = userRepository;
+        this.uslugaService = uslugaService;
+    }
 
+    @PreAuthorize("hasRole('ROLE_MASTER')")
     @PostMapping(path="/create/{userId}")
     public ResponseEntity<?> createUsluga(@PathVariable Long userId, @RequestBody Usluga usluga) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             usluga.setUser(user);
-            Usluga savedUsluga = UslugaRepository.save(usluga);
+            Usluga savedUsluga = uslugaRepository.save(usluga);
             return ResponseEntity.ok(savedUsluga);
         } else {
             return ResponseEntity.notFound().build();
@@ -40,14 +45,16 @@ public class UslugaController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Usluga>> getAllUslugas() {
-        List<Usluga> Uslugas = UslugaRepository.findAll();
+        List<Usluga> Uslugas = uslugaRepository.findAll();
         return ResponseEntity.ok(Uslugas);
     }
+    @PreAuthorize("hasRole('ROLE_MASTER')")
     @GetMapping("/{userId}/Uslugas")
     public ResponseEntity<List<Usluga>> getUslugasByUserId(@PathVariable Long userId) {
         List<Usluga> uslugas = uslugaService.getUslugas(userId);
         return ResponseEntity.ok(uslugas);
     }
+    @PreAuthorize("hasRole('ROLE_MASTER')")
     @DeleteMapping("/{id}")
     public String deleteUsluga(@PathVariable(value = "id") long Id) {
         uslugaService.deleteUsluga(Id);
@@ -55,12 +62,12 @@ public class UslugaController {
     }
     @GetMapping("/search")
     public ResponseEntity<List<Usluga>> searchUslugasByName(@RequestParam String name) {
-        List<Usluga> uslugas = UslugaRepository.findByNameContainingIgnoreCase(name);
+        List<Usluga> uslugas = uslugaRepository.findByNameContainingIgnoreCase(name);
         return ResponseEntity.ok(uslugas);
     }
     @GetMapping("/city")
     public ResponseEntity<List<Usluga>> getUslugasByLocation(@RequestParam String location) {
-        List<Usluga> Uslugas = UslugaRepository.findByLocation(location);
+        List<Usluga> Uslugas = uslugaRepository.findByLocation(location);
         return ResponseEntity.ok(Uslugas);
     }
 }
