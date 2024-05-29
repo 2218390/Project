@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserPostDTO;
+import com.example.demo.model.Review;
 import com.example.demo.model.User;
 import com.example.demo.model.Usluga;
 import com.example.demo.service.UserService;
@@ -8,6 +9,8 @@ import com.example.demo.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -142,6 +145,58 @@ public class UserController {
             return ResponseEntity.ok(favoriteUslugas);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/user/{reviewerId}/review/{reviewedUserId}")
+    public ResponseEntity<?> addReview(@PathVariable Long reviewerId, @PathVariable Long reviewedUserId, @RequestBody String content) {
+        Optional<User> optionalReviewer = userService.findByID(reviewerId);
+        Optional<User> optionalReviewedUser = userService.findByID(reviewedUserId);
+
+        if (optionalReviewer.isPresent() && optionalReviewedUser.isPresent()) {
+            User reviewer = optionalReviewer.get();
+            User reviewedUser = optionalReviewedUser.get();
+            Review review = new Review(reviewer, reviewedUser, content);
+            userService.saveReview(review);
+            return ResponseEntity.ok("Review added successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/user/{userId}/reviews")
+    public ResponseEntity<?> getReviewsForUser(@PathVariable Long userId) {
+        Optional<User> optionalUser = userService.findByID(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Review> reviews = userService.getReviewsForUser(user);
+            return ResponseEntity.ok(reviews);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping("/user/review/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
+        Optional<Review> optionalReview = userService.findReviewById(reviewId);
+
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            String currentUsername = getCurrentUsername();
+            if (review.getReviewer().getEmail().equals(currentUsername)) {
+                userService.deleteReview(reviewId);
+                return ResponseEntity.ok("Review deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to delete this review.");
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    private String getCurrentUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
         }
     }
 }

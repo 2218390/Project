@@ -39,6 +39,7 @@ public class User implements Serializable {
 	String password;
 
 	String role;
+
 	@Lob
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] profilePicture;
@@ -51,12 +52,15 @@ public class User implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "Usluga_id")
 	)
 	private List<Usluga> favoriteUslugas = new ArrayList<>();
-
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<Usluga> uslugas=new ArrayList<>();
 
+	@OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Review> writtenReviews = new ArrayList<>();
 
+	@OneToMany(mappedBy = "reviewedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Review> receivedReviews = new ArrayList<>();
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -152,6 +156,21 @@ public class User implements Serializable {
 	}
 
 	public List<Usluga> getFavoriteUslugas(){return favoriteUslugas;}
+	public List<Review> getWrittenReviews() {
+		return writtenReviews;
+	}
+
+	public void setWrittenReviews(List<Review> writtenReviews) {
+		this.writtenReviews = writtenReviews;
+	}
+
+	public List<Review> getReceivedReviews() {
+		return receivedReviews;
+	}
+
+	public void setReceivedReviews(List<Review> receivedReviews) {
+		this.receivedReviews = receivedReviews;
+	}
 	public void setFavoriteUslugas(List<Usluga> favoriteUslugas){this.favoriteUslugas=favoriteUslugas;}
 	@Override
 	public String toString() {

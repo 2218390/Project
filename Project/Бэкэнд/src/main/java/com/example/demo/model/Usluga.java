@@ -85,5 +85,7 @@ public class Usluga {
     public void setDurationMinutes(int durationMinutes) {
         this.durationMinutes = durationMinutes;
     }
+    public List<Slot> getSlots(){return slots;}
+    public void setSlots(List<Slot> slots){this.slots=slots;}
 }
 

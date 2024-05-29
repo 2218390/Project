@@ -52,6 +52,9 @@ public class UslugaController {
             uslugaToUpdate.setDescription(newUsluga.getDescription());
             uslugaToUpdate.setCoordinates(newUsluga.getCoordinates());
             uslugaToUpdate.setLocation(newUsluga.getLocation());
+            uslugaToUpdate.setSlots(newUsluga.getSlots());
+            uslugaToUpdate.setPrice(newUsluga.getPrice());
+            uslugaToUpdate.setDurationMinutes(newUsluga.getDurationMinutes());
             uslugaService.saveUsluga(uslugaToUpdate);
             return new ResponseEntity<>(Optional.ofNullable(uslugaToUpdate), HttpStatus.OK);
         } else {
