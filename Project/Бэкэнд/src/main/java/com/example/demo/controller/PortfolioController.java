@@ -59,7 +59,6 @@ public class PortfolioController {
         Optional<Portfolio> existingPortfolio = portfolioService.findByID(Id);
         if (existingPortfolio.isPresent()) {
             Portfolio portfolioToUpdate = existingPortfolio.get();
-            portfolioToUpdate.setProffesion(newPortfolio.getProffesion());
             portfolioToUpdate.setPhotos(newPortfolio.getPhotos());
             portfolioToUpdate.setDescription(newPortfolio.getDescription());
             portfolioService.savePortfolio(portfolioToUpdate);

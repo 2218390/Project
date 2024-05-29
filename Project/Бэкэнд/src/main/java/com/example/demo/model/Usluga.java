@@ -1,9 +1,11 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Usluga {
@@ -17,12 +19,13 @@ public class Usluga {
     @JoinColumn(name="user_id")
     @JsonBackReference
     private User user;
-
     private String location;
     private String coordinates;
-    private Date date;
-    private String userName;
-
+    @OneToMany(mappedBy="usluga", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Slot> slots=new ArrayList<>();
+    private double price;
+    private int durationMinutes;
 
     public Usluga() {
         super();
@@ -30,15 +33,15 @@ public class Usluga {
     }
 
 
-    public Usluga(String name, String description, User user, String location, String coordinates, Date date, String userName) {
+    public Usluga(String name, String description, User user, String location, String coordinates, double price, int durationMinutes) {
         super();
         this.name = name;
         this.description = description;
         this.user = user;
         this.location = location;
         this.coordinates = coordinates;
-        this.date = date;
-        this.userName = userName;
+        this.price=price;
+        this.durationMinutes=durationMinutes;
     }
 
     public Long getId() {
@@ -66,9 +69,21 @@ public class Usluga {
     public void setLocation(String location){this.location=location;}
     public String getCoordinates(){return coordinates;}
     public void setCoordinates(String coordinates){this.coordinates=coordinates;}
-    public Date getDate(){return date;}
-    public void setDate(Date date){this.date=date;}
-    public String getUserName(){return userName;}
-    public void setUserName(String userName){this.userName=userName;}
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
 }
 

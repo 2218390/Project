@@ -12,7 +12,10 @@ public class Portfolio {
     @JoinColumn(name = "user_id")
     User user;
 
-    String proffesion;
+    private int experience;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] certificate;
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")
@@ -22,9 +25,8 @@ public class Portfolio {
     public Portfolio(){
 
     }
-    public Portfolio(User user, String proffesion, byte[] photos, String description ) {
+    public Portfolio(User user, byte[] photos, String description ) {
         this.user = user;
-        this.proffesion = proffesion;
         this.photos = photos;
         this.description = description;
     }
@@ -43,14 +45,6 @@ public class Portfolio {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getProffesion() {
-        return proffesion;
-    }
-
-    public void setProffesion(String proffesion) {
-        this.proffesion = proffesion;
     }
 
     public byte[] getPhotos() {

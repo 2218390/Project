@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
+import java.sql.Time;
+import java.util.Date;
+
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Application {
@@ -19,6 +22,9 @@ public class Application {
     private String applicantName;
     private String uslugaName;
     private String applicantEmail;
+    private Date date;
+
+    private Time time;
     @ManyToOne
     @JoinColumn(name="user_id")
     @JsonBackReference
@@ -68,4 +74,8 @@ public class Application {
     public void setUser(User user){
         this.user=user;
     }
+    public Date getDate(){return date;}
+    public void setDate(Date date){this.date=date;}
+    public Time getTime(){return time;}
+    public void setTime(Time time){this.time=time;}
 }

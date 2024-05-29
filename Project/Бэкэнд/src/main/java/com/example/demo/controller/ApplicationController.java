@@ -48,7 +48,8 @@ public class ApplicationController {
                 application.setUser(user);
                 application.setApplicantName(user.getName());
                 application.setApplicantEmail(user.getEmail());
-                application.setUslugaName(usluga.getName());
+                application.setDate();
+                application.setTime();
                 Application savedApplication = applicationRepository.save(application);
                 return ResponseEntity.ok(savedApplication);
             }

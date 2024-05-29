@@ -49,7 +49,6 @@ public class UslugaController {
         if (existingUsluga.isPresent()) {
             Usluga uslugaToUpdate = existingUsluga.get();
             uslugaToUpdate.setName(newUsluga.getName());
-            uslugaToUpdate.setDate(newUsluga.getDate());
             uslugaToUpdate.setDescription(newUsluga.getDescription());
             uslugaToUpdate.setCoordinates(newUsluga.getCoordinates());
             uslugaToUpdate.setLocation(newUsluga.getLocation());
