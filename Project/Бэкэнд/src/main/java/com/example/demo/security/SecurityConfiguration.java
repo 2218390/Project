@@ -22,6 +22,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -31,7 +32,6 @@ public class SecurityConfiguration {
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -39,34 +39,22 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(csrf -> csrf.disable());
-
-        http
-                .cors((cors) -> cors
-                        .configurationSource(corsConfigurationSource())
-                );
-
-        http.sessionManagement((session) -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
-
-        http
-                .addFilterBefore(new LoginFilter("/login", authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class);
-
-        http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.POST,"/user").permitAll()
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
+        http.addFilterBefore(new LoginFilter("/login", authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
-
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -90,6 +78,5 @@ public class SecurityConfiguration {
 				.build();
 		return new InMemoryUserDetailsManager(user);
 	}
-
-	   */
+    */
 }
