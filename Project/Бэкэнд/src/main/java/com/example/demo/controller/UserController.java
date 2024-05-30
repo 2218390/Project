@@ -6,6 +6,7 @@ import com.example.demo.model.User;
 import com.example.demo.model.Usluga;
 import com.example.demo.service.UserService;
 import com.example.demo.service.UslugaService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,12 @@ public class UserController {
     }
 
     // Get All Users
+    @Operation(summary = "Посмотреть всех пользователей")
     @GetMapping("/user")
     public List<User> getUsers() {
         return userService.getUsers();
     }
-
+    @Operation(summary = "Регистрация пользователя")
     @PostMapping("/user")
     public ResponseEntity<Optional<User>> addUser(@RequestBody UserPostDTO newUserDTO) {
 
@@ -53,6 +55,7 @@ public class UserController {
         return new ResponseEntity<>(Optional.ofNullable(newUser),HttpStatus.CREATED);
 
     }
+    @Operation(summary = "Обновить профиль пользователя")
     @PutMapping("/user/{id}")
     public ResponseEntity<Optional<User>> updateUser(@PathVariable(value="id") long Id, @RequestBody User newUser ){
         Optional<User> existingUser = userService.findByID(Id);
@@ -68,6 +71,7 @@ public class UserController {
             return new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
         }
     }
+    @Operation(summary = "Обновить фотографию в профиле")
     @PutMapping(path="/user/{id}", consumes = "multipart/form-data")
     public ResponseEntity<Optional<User>> updateProfilePicture(@RequestPart(value = "file") MultipartFile file, @PathVariable(value="id") long Id) {
         Optional<User> existingUser = userService.findByID(Id);
@@ -89,6 +93,7 @@ public class UserController {
         }
     }
     // Get User by ID
+    @Operation(summary = "Получить информацию по определенному пользователю")
     @GetMapping("/user/{id}")
     public Optional<User> getUserById(@PathVariable(value = "id") long Id) {
         return userService.findByID(Id);
@@ -96,6 +101,7 @@ public class UserController {
 
 
     //Delete a User by ID
+    @Operation(summary = "Удалить пользователя")
     @DeleteMapping("/user/{id}")
     public String deleteUser(@PathVariable(value = "id") long Id) {
         userService.deleteUser(Id);
@@ -103,11 +109,13 @@ public class UserController {
     }
 
     //Get User by Email
-    @GetMapping("user/email/{email}")
+    @Operation(summary = "Получить информацию по определенному пользователю по его почте")
+    @GetMapping("user/{email}")
     public Optional<User> getUserByEmail(@PathVariable(value = "email") String email) {
         return Optional.ofNullable(userService.findByEmail(email));
     }
-    @PostMapping("/user/{userId}/Uslugas/{uslugaId}/favorite")
+    @Operation(summary = "Добавление услуги в избранное")
+    @PostMapping("/user/{userId}/{uslugaId}/favorite")
     public ResponseEntity<String> addUslugaToFavorites(@PathVariable Long userId, @PathVariable Long uslugaId) {
         Optional<User> optionalUser = userService.findByID(userId);
         Optional<Usluga> optionalUsluga = uslugaService.findByID(uslugaId);
@@ -121,8 +129,8 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @DeleteMapping("/user/{userId}/Uslugas/{uslugaId}/favorite")
+    @Operation(summary = "Удалить услугу из избранного")
+    @DeleteMapping("/user/{userId}/{uslugaId}/favorite")
     public ResponseEntity<String> removeUslugaFromFavorites(@PathVariable Long userId, @PathVariable Long uslugaId) {
         Optional<User> optionalUser = userService.findByID(userId);
         Optional<Usluga> optionalUsluga = uslugaService.findByID(uslugaId);
@@ -136,7 +144,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @Operation(summary = "Посмотреть услуги из избранного")
     @GetMapping("/{userId}/favorite-Uslugas")
     public ResponseEntity<List<Usluga>> getFavoriteUslugas(@PathVariable Long userId) {
         Optional<User> optionalUser = userService.findByID(userId);
@@ -147,6 +155,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @Operation(summary = "Добавить отзыв")
     @PostMapping("/user/{reviewerId}/review/{reviewedUserId}")
     public ResponseEntity<?> addReview(@PathVariable Long reviewerId, @PathVariable Long reviewedUserId, @RequestBody String content) {
         Optional<User> optionalReviewer = userService.findByID(reviewerId);
@@ -162,7 +171,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @Operation(summary = "Посмотреть отзывы на определенного мастера")
     @GetMapping("/user/{userId}/reviews")
     public ResponseEntity<?> getReviewsForUser(@PathVariable Long userId) {
         Optional<User> optionalUser = userService.findByID(userId);
@@ -174,6 +183,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @Operation(summary = "Удалить отзыв")
     @DeleteMapping("/user/review/{reviewId}")
     public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
         Optional<Review> optionalReview = userService.findReviewById(reviewId);

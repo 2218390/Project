@@ -5,6 +5,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.PortfolioRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PortfolioService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,13 @@ public class PortfolioController {
         this.userRepository = userRepository;
         this.portfolioRepository = portfolioRepository;
     }
-
+    @Operation(summary = "Посмотреть все портфолио")
     @GetMapping("/portfolio")
-    public List<Portfolio> getUsers() {
+    public List<Portfolio> getPortfolios() {
         return portfolioService.getPortfolios();
     }
-
-    @PostMapping(path="/create_portfolio/{userId}")
+    @Operation(summary = "Создать портфолио")
+    @PostMapping(path="/create/{userId}")
     public ResponseEntity<?> createPortfolio(@PathVariable Long userId, @RequestBody Portfolio portfolio) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
@@ -43,17 +44,18 @@ public class PortfolioController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @Operation(summary = "Посмотреть портфолио определенного мастера")
     @GetMapping("/portfolio/{id}")
     public Optional<Portfolio> getPortfolioById(@PathVariable(value = "id") long Id) {
         return portfolioService.findByID(Id);
     }
-
+    @Operation(summary = "Удалить портфолио")
     @DeleteMapping("/portfolio/{id}")
-    public String deleteUser(@PathVariable(value = "id") long Id) {
+    public String deletePortfolio(@PathVariable(value = "id") long Id) {
         portfolioService.deletePortfolio(Id);
         return "Portfolio Deleted";
     }
+    @Operation(summary = "Обновить портфолио")
     @PutMapping("/portfolio/{id}")
     public ResponseEntity<Optional<Portfolio>> updatePortfolio(@PathVariable(value="id") long Id, @RequestBody Portfolio newPortfolio ){
         Optional<Portfolio> existingPortfolio = portfolioService.findByID(Id);

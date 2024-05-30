@@ -7,6 +7,7 @@ import com.example.demo.repository.ApplicationRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UslugaRepository;
 import com.example.demo.service.ApplicationService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,8 +33,8 @@ public class ApplicationController {
         this.uslugaRepository = uslugaRepository;
         this.applicationService = applicationService;
     }
-
-    @PostMapping("/apply/{userId}/{uslugaId}")
+    @Operation(summary = "Запись на услугу")
+    @PostMapping("/{userId}/{uslugaId}")
     public ResponseEntity<?> applyForUsluga(@PathVariable Long uslugaId, @PathVariable Long userId, @RequestBody Application application) {
         Optional<Usluga> optionalUsluga = uslugaRepository.findById(uslugaId);
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -57,17 +58,20 @@ public class ApplicationController {
             return ResponseEntity.notFound().build();
         }
     }
+    @Operation(summary = "Посмотреть записи на определенную услугу")
     @PreAuthorize("hasRole('ROLE_MASTER')")
-    @GetMapping("/{uslugaId}/applications")
+    @GetMapping("/{uslugaId}")
     public ResponseEntity<List<Application>> getApplicationsForUsluga(@PathVariable Long uslugaId) {
         List<Application> applications = applicationService.getApplicationsUsluga(uslugaId);
         return ResponseEntity.ok(applications);
     }
-    @GetMapping("/applications/{userId}")
+    @Operation(summary = "Посмотреть записи к определенному мастеру")
+    @GetMapping("/{userId}")
     public ResponseEntity<List<Application>> getApplicationsForUser(@PathVariable Long userId) {
         List<Application> applications = applicationService.getApplicationsUser(userId);
         return ResponseEntity.ok(applications);
     }
+    @Operation(summary = "Удалить услугу")
     @DeleteMapping("/{id}")
     public String withdrawApplication(@PathVariable(value = "id") long Id) {
         applicationService.deleteApplication(Id);
