@@ -66,7 +66,7 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+//;
 	/*
 	//If you want to configure an InMemory User for testing
 	@Bean
